@@ -5,15 +5,12 @@ class Solution:
         :type fee: int
         :rtype: int
         """
-        n = len(prices)
-        if n==0:
+        if len(prices) < 2:
             return 0
+        curr = [-prices[0] - fee, 0]  # buy, sell
+        for i in range(1, len(prices)):
+            prev = list(curr)
+            curr[0] = max(prev[0], prev[1] - prices[i] - fee)
+            curr[1] = max(prev[1], prev[0] + prices[i])
 
-        s0 = 0 #no stock at this moment
-        s1 = -prices[0]-fee #hold 1 stock at this moment
-
-        for i in range(1, n):
-            s0 = max(s0, s1+prices[i])
-            s1 = max(s1, s0-prices[i]-fee)
-
-        return s0
+        return max(curr)
